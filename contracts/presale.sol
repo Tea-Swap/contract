@@ -24,19 +24,20 @@ contract Presale is Ownable {
     bool public startUnlocked;
     bool public endUnlocked;
     bool public claimUnlocked;
+    bool public newTokenUpdate;
 
     mapping(address => uint256) public deposits;
 
     constructor(
-        IERC20 _MINT,
         uint256 startTimestamp,
         uint256 endTimestamp
     ) {
-        token = _MINT;
         presale =  payable(0xc52B651d2005A7eB4DF03e9A0666A957A4B17f76);
 
         presaleStartTimestamp = startTimestamp;
         presaleEndTimestamp = endTimestamp;
+
+        newTokenUpdate = false;
     }
 
     event StartUnlockedEvent(uint256 startTimestamp);
@@ -66,12 +67,14 @@ contract Presale is Ownable {
 
     function withdrawToken() external onlyOwner {
         require(endUnlocked);
+        require(newTokenUpdate, "new token is not updated");
         // require(block.timestamp >= presaleEndTimestamp || totalDepositedEthBalance == hardCapEthAmount, "presale is active");
         token.transfer(msg.sender, token.balanceOf(address(this)));
     }
 
     function claimToken() public {
         require(endUnlocked, "too early to claim");
+        require(newTokenUpdate, "new token is not updated");
         uint256 tokenAmount = deposits[msg.sender].mul(1e18).div(rewardTokenCount);
         token.transfer(msg.sender, tokenAmount);
     }
@@ -102,6 +105,14 @@ contract Presale is Ownable {
         require(!endUnlocked, 'Presale already ended!');
         endUnlocked = true;
         EndUnlockedEvent(block.timestamp);
+    }
+
+    function setToken(address _token) public onlyOwner {
+        token = IERC20(_token);
+    }
+
+    function setNewTokenUpdate(bool _update) public onlyOwner {
+        newTokenUpdate = _update;
     }
 
     event Deposited(address indexed user, uint256 amount);
