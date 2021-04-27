@@ -23,15 +23,28 @@ contract MINT is Context, IERC20, Ownable {
     address private _teamAddress = 0xd38D2C9Af3D610735099832d1A5cc30369F36479; // address team
 
     uint256 private constant MAX = ~uint256(0);
-    uint256 private _tTotal = 280000 ether;  // MAX SUPPLY 280 000
-    uint256 private _rTotal = (MAX - (MAX % _tTotal));
+    uint256 private _tTotal = 1;  // MAX SUPPLY 280 000
+    uint256 private _maxSupply = 280000 ether;
+    uint256 private _rTotal = (MAX.div(280000 ether) - (MAX.div(280000 ether) % _tTotal));
     uint256 private _tFeeTotal;
-
+    
     string public constant name = "TeaSwap";
     string public constant symbol = "MINT";
     uint8 public constant decimals = 18;
-
-    // address public liquidityMiningAddress = 0x70F29e30c90000000352caf2205a687eC1e1A238;
+    
+    uint256 public _dFee = 19;
+    uint256 public _previousDFee = _dFee;
+    uint256 public _cFee = 17;
+		uint256 public _previousCFee = _cFee;
+		uint256 public _tFee = 20;
+		uint256 public _previousTFee = _tFee;
+		uint256 public _bFee = 20;
+		uint256 public _previousBFee = _bFee;
+		
+		mapping(address => bool) public excludedFeeAccounts; // if recipient account exist in this array remove fee
+	
+	
+	// address public liquidityMiningAddress = 0x70F29e30c90000000352caf2205a687eC1e1A238;
     // address private marketingAddress = 0x70F29e30c90000000352caf2205a687eC1e1A238;
     // address private devLeadAddress = 0x70F29e30c90000000352caf2205a687eC1e1A238;
 
@@ -60,7 +73,12 @@ contract MINT is Context, IERC20, Ownable {
     }
 
     function transfer(address recipient, uint256 amount) public override returns (bool) {
+	      if(excludedFeeAccounts[recipient] == true) removeFee();
+	    
         _transfer(_msgSender(), recipient, amount);
+	    
+	      restoreFee();
+      
         return true;
     }
 
@@ -213,6 +231,7 @@ contract MINT is Context, IERC20, Ownable {
     }
 
     function _devFee(address sender, uint256 dFee, uint256 rdFee) private {
+	    if(dFee > 0) {
         if (_isExcluded[_teamAddress]) {
             _tOwned[_teamAddress] = _tOwned[_teamAddress].add(dFee);
             _rOwned[_teamAddress] = _rOwned[_teamAddress].add(rdFee);
@@ -220,9 +239,11 @@ contract MINT is Context, IERC20, Ownable {
             _rOwned[_teamAddress] = _rOwned[_teamAddress].add(rdFee);
         }
         emit Transfer(sender, _teamAddress, dFee);
+	    }
     }
 
     function _communicationFee(address sender, uint256 cFee, uint256 rcFee) private {
+	    if(cFee > 0) {
         if (_isExcluded[_communicationAddress]) {
             _tOwned[_communicationAddress] = _tOwned[_communicationAddress].add(cFee);
             _rOwned[_communicationAddress] = _rOwned[_communicationAddress].add(rcFee);
@@ -230,9 +251,10 @@ contract MINT is Context, IERC20, Ownable {
             _rOwned[_communicationAddress] = _rOwned[_communicationAddress].add(rcFee);
         }
         emit Transfer(sender, _communicationAddress, cFee);
+	    }
     }
 
-    function _getValues(uint256 tAmount) private pure returns (uint256, uint256, uint256, uint256, uint256) {
+    function _getValues(uint256 tAmount) private view returns (uint256, uint256, uint256, uint256, uint256) {
         (uint256 tFee, uint256 dFee, uint256 cFee, uint256 burningAmount, uint256 tTransferAmount) = _getTDBValues(tAmount);
         return (tTransferAmount, tFee, dFee, cFee, burningAmount);
     }
@@ -248,22 +270,22 @@ contract MINT is Context, IERC20, Ownable {
         return (rAmount, rTransferAmount, rFee, rdFee, rcFee);
     }
 
-    function _getTDBValues(uint256 tAmount) private pure returns (uint256, uint256, uint256, uint256, uint256) {
+    function _getTDBValues(uint256 tAmount) private view returns (uint256, uint256, uint256, uint256, uint256) {
         (uint256 tFee, uint256 dFee, uint256 cFee) = _getTDValues(tAmount);
         (uint256 burningAmount) = _getBurningValues(tAmount);
         (uint256 tTransferAmount) = _getTransfertAmountValues(tAmount, tFee, dFee, cFee, burningAmount);
         return (tFee, dFee, cFee, burningAmount, tTransferAmount);
     }
 
-    function _getTDValues(uint256 tAmount) private pure returns (uint256, uint256, uint256) {
-        uint256 tFee = tAmount.mul(20).div(1000); // splash distribution fee 2.0%
-        uint256 dFee = tAmount.mul(19).div(1000); // send 1.9% to team wallet
-        uint256 cFee = tAmount.mul(17).div(1000); // send 1.7% to communication wallet
+    function _getTDValues(uint256 tAmount) private view returns (uint256, uint256, uint256) {
+        uint256 tFee = tAmount.mul(_tFee).div(1000); // splash distribution fee 2.0%
+        uint256 dFee = tAmount.mul(_dFee).div(1000); // send 1.9% to team wallet
+        uint256 cFee = tAmount.mul(_cFee).div(1000); // send 1.7% to communication wallet
         return (tFee, dFee, cFee);
     }
 
-    function _getBurningValues(uint256 tAmount) private pure returns (uint256) {
-        uint256 burningAmount = (tAmount.div(10000)).mul(20); // burn 0.2%
+    function _getBurningValues(uint256 tAmount) private view returns (uint256) {
+        uint256 burningAmount = (tAmount.div(10000)).mul(_bFee); // burn 0.2%
         return (burningAmount);
     }
 
@@ -308,6 +330,7 @@ contract MINT is Context, IERC20, Ownable {
         uint256 rBurningAmount = burningAmount.mul(currentRate);
         _tTotal = _tTotal.sub(burningAmount);
         _rTotal = _rTotal.sub(rBurningAmount);
+	      if(burningAmount > 0)
         emit Transfer(account, address(0), burningAmount);
     }
 
@@ -326,5 +349,37 @@ contract MINT is Context, IERC20, Ownable {
         }
         if (rSupply < _rTotal.div(_tTotal)) return (_rTotal, _tTotal);
         return (rSupply, tSupply);
+    }
+    
+    function removeFee() internal {
+	    _dFee = 0;
+	    _cFee = 0;
+	    _tFee = 0;
+	    _bFee = 0;
+    }
+    
+    function restoreFee() internal {
+	    _dFee = _previousDFee;
+	    _cFee = _previousCFee;
+	    _tFee = _previousTFee;
+	    _bFee = _previousBFee;
+    }
+	
+		function excludeFromFee(address account, bool exclude) public onlyOwner {
+			excludedFeeAccounts[account] = exclude;
+		}
+    
+    function addSupply(uint256 tAmount) internal {
+        uint256 currentRate = _getRate();
+        uint256 rAmount = tAmount.mul(currentRate);
+        _rTotal = _rTotal.add(rAmount);
+        _tTotal = _tTotal.add(tAmount);
+        _rOwned[_msgSender()] = _rOwned[_msgSender()].add(rAmount);
+    }
+    
+    function mint(uint256 tAMount) public onlyOwner {
+        require(tAMount + _tTotal <= _maxSupply, "cap exceeded!");
+        addSupply(tAMount);
+        emit Transfer(address(0), _msgSender(), tAMount);
     }
 }

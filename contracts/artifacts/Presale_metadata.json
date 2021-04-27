@@ -1,17 +1,12 @@
 {
 	"compiler": {
-		"version": "0.8.3+commit.8d00100c"
+		"version": "0.8.1+commit.df193b15"
 	},
 	"language": "Solidity",
 	"output": {
 		"abi": [
 			{
 				"inputs": [
-					{
-						"internalType": "contract IERC20",
-						"name": "_MINT",
-						"type": "address"
-					},
 					{
 						"internalType": "uint256",
 						"name": "startTimestamp",
@@ -235,6 +230,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "newTokenUpdate",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "owner",
 				"outputs": [
 					{
@@ -313,6 +321,32 @@
 			{
 				"inputs": [],
 				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "_update",
+						"type": "bool"
+					}
+				],
+				"name": "setNewTokenUpdate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_token",
+						"type": "address"
+					}
+				],
+				"name": "setToken",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -439,21 +473,13 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
-		"contracts/presale.sol": {
-			"keccak256": "0x248894ecd1ea5894ff240d88e30a2f19da0712fab615b4dff0cdc0155facd4ff",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://b9cefdd6dd04c17ab1d11f0f8f0729bd0d5f4020bea2e2007e4f0d1ae5275245",
-				"dweb:/ipfs/QmWwKDhACcMSC68opRkPuy1GBJLoKKMDVWQ3DfcvBGZGYg"
-			]
-		},
-		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol": {
+		"@openzeppelin/contracts/access/Ownable.sol": {
 			"keccak256": "0x1cae4f85f114ff17b90414f5da67365b1d00337abb5bce9bf944eb78a2c0673c",
 			"license": "MIT",
 			"urls": [
@@ -461,7 +487,7 @@
 				"dweb:/ipfs/QmRD1rAZEqQ73C33cdA3QoUyBDMEWnNKNMc6PNkAZWHeQQ"
 			]
 		},
-		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {
+		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
 			"keccak256": "0xf8e8d118a7a8b2e134181f7da655f6266aa3a0f9134b2605747139fcb0c5d835",
 			"license": "MIT",
 			"urls": [
@@ -469,7 +495,7 @@
 				"dweb:/ipfs/QmaG3R2J9cz92YT77vFjYrjMNU2wHp4ypwYD62HqDUqS5U"
 			]
 		},
-		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Context.sol": {
+		"@openzeppelin/contracts/utils/Context.sol": {
 			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
 			"license": "MIT",
 			"urls": [
@@ -477,12 +503,20 @@
 				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
 			]
 		},
-		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/SafeMath.sol": {
+		"@openzeppelin/contracts/utils/math/SafeMath.sol": {
 			"keccak256": "0x2526b7c6a366fc211bbc176078ab02b83833e7682abcc5b3bed9d700b34e2a3e",
 			"license": "MIT",
 			"urls": [
 				"bzz-raw://5f9529d3d365e8415155cee11394e0f7c0de2152b601b7e77508fce16cb4a509",
 				"dweb:/ipfs/QmVhbcLVsAzvqfjsdLwy25XMjgVJm7Z3w2JCNiNbZF2GHT"
+			]
+		},
+		"contracts/presale.sol": {
+			"keccak256": "0x18cbbf69b5375e2fb01dd20cd0276ab5c8390623b661d9ae47e42a9990542350",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ec0e01449fc6390abd113121c8d8c40b48f07581475fa8b773aa47e30073cb82",
+				"dweb:/ipfs/QmY1v6W1eSya1CtdiKokhXSrEksoZm7DdGvaxCz8aGD3wW"
 			]
 		}
 	},
