@@ -99,12 +99,12 @@ contract Presale is Ownable {
     function unlockStart() external onlyOwner {
         require(!startUnlocked, 'Presale already started!');
         startUnlocked = true;
-        StartUnlockedEvent(block.timestamp);
+        emit StartUnlockedEvent(block.timestamp);
     }
     function unlockEnd() external onlyOwner {
         require(!endUnlocked, 'Presale already ended!');
         endUnlocked = true;
-        EndUnlockedEvent(block.timestamp);
+        emit EndUnlockedEvent(block.timestamp);
     }
     
     function setToken(address _token) public onlyOwner {
