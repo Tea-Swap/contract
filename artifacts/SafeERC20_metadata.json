@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.6.12+commit.27d51765"
+		"version": "0.8.4+commit.c7e474f2"
 	},
 	"language": "Solidity",
 	"output": {
@@ -20,7 +20,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/MasterChef.sol": "SafeERC20"
+			"MasterChef_flat.sol": "SafeERC20"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -34,12 +34,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/MasterChef.sol": {
-			"keccak256": "0x4bfc9095887928e8b1f7a281bd2e3ee30d5fb889a2bbe120d27a115c97cf96e1",
+		"MasterChef_flat.sol": {
+			"keccak256": "0xfae702c1a079fbc5166099d5d51c4c0fb7533b75e780cad08ec82ee63dccaf3b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://64b080f73bbbaa37f6fce7328ba5d3924a213275209a7be22116e2d1a15bf11e",
-				"dweb:/ipfs/QmPrz2caWVAfpz1rMnfsJrtoS9oNpkW6iT9jV2BMhZL3wY"
+				"bzz-raw://ac43f804fa405d6cb776935af4a24b265f27551cf89b673d13dec2f6fe2a2f6f",
+				"dweb:/ipfs/QmQqGVGBaKQrDTZDk1o2Ghvq58HWTLiRvxmzC3ep1WuQon"
 			]
 		}
 	},

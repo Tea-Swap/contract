@@ -6,11 +6,6 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -33,6 +28,56 @@
 					}
 				],
 				"name": "Approval",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "delegator",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "fromDelegate",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "toDelegate",
+						"type": "address"
+					}
+				],
+				"name": "DelegateChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "delegate",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "previousBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newBalance",
+						"type": "uint256"
+					}
+				],
+				"name": "DelegateVotesChanged",
 				"type": "event"
 			},
 			{
@@ -78,6 +123,32 @@
 				],
 				"name": "Transfer",
 				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "DELEGATION_TYPEHASH",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "DOMAIN_TYPEHASH",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -251,6 +322,35 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"name": "checkpoints",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "fromBlock",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "votes",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "decimals",
 				"outputs": [
@@ -285,6 +385,76 @@
 					}
 				],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "delegatee",
+						"type": "address"
+					}
+				],
+				"name": "delegate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "delegatee",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "nonce",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expiry",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint8",
+						"name": "v",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "r",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "s",
+						"type": "bytes32"
+					}
+				],
+				"name": "delegateBySig",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "delegator",
+						"type": "address"
+					}
+				],
+				"name": "delegates",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -332,6 +502,49 @@
 						"internalType": "bool",
 						"name": "",
 						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "getCurrentVotes",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "getPriorVotes",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -414,6 +627,44 @@
 						"internalType": "string",
 						"name": "",
 						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "nonces",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "numCheckpoints",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
 					}
 				],
 				"stateMutability": "view",
@@ -600,6 +851,44 @@
 				"balanceOf(address)": {
 					"details": "Returns the amount of tokens owned by `account`."
 				},
+				"delegate(address)": {
+					"params": {
+						"delegatee": "The address to delegate votes to"
+					}
+				},
+				"delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32)": {
+					"params": {
+						"delegatee": "The address to delegate votes to",
+						"expiry": "The time at which to expire the signature",
+						"nonce": "The contract state required to match the signature",
+						"r": "Half of the ECDSA signature pair",
+						"s": "Half of the ECDSA signature pair",
+						"v": "The recovery byte of the signature"
+					}
+				},
+				"delegates(address)": {
+					"params": {
+						"delegator": "The address to get delegatee for"
+					}
+				},
+				"getCurrentVotes(address)": {
+					"params": {
+						"account": "The address to get votes balance"
+					},
+					"returns": {
+						"_0": "The number of current votes for `account`"
+					}
+				},
+				"getPriorVotes(address,uint256)": {
+					"details": "Block number must be a finalized block or else this function will revert to prevent misinformation.",
+					"params": {
+						"account": "The address of the account to check",
+						"blockNumber": "The block number to get the vote balance at"
+					},
+					"returns": {
+						"_0": "The number of votes the account had as of the given block"
+					}
+				},
 				"owner()": {
 					"details": "Returns the address of the current owner."
 				},
@@ -622,14 +911,53 @@
 			"version": 1
 		},
 		"userdoc": {
+			"events": {
+				"DelegateChanged(address,address,address)": {
+					"notice": "An event thats emitted when an account changes its delegate"
+				},
+				"DelegateVotesChanged(address,uint256,uint256)": {
+					"notice": "An event thats emitted when a delegate account's vote balance changes"
+				}
+			},
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"DELEGATION_TYPEHASH()": {
+					"notice": "The EIP-712 typehash for the delegation struct used by the contract"
+				},
+				"DOMAIN_TYPEHASH()": {
+					"notice": "The EIP-712 typehash for the contract's domain"
+				},
+				"checkpoints(address,uint32)": {
+					"notice": "A record of votes checkpoints for each account, by index"
+				},
+				"delegate(address)": {
+					"notice": "Delegate votes from `msg.sender` to `delegatee`"
+				},
+				"delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32)": {
+					"notice": "Delegates votes from signatory to `delegatee`"
+				},
+				"delegates(address)": {
+					"notice": "Delegate votes from `msg.sender` to `delegatee`"
+				},
+				"getCurrentVotes(address)": {
+					"notice": "Gets the current votes balance for `account`"
+				},
+				"getPriorVotes(address,uint256)": {
+					"notice": "Determine the prior number of votes for an account as of a block number"
+				},
+				"nonces(address)": {
+					"notice": "A record of states for signing / validating signatures"
+				},
+				"numCheckpoints(address)": {
+					"notice": "The number of checkpoints for each account"
+				}
+			},
 			"version": 1
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/MINT.sol": "MINT"
+			"MasterChef_flat.sol": "GMINT"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -643,52 +971,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"@openzeppelin/contracts/access/Ownable.sol": {
-			"keccak256": "0x1cae4f85f114ff17b90414f5da67365b1d00337abb5bce9bf944eb78a2c0673c",
+		"MasterChef_flat.sol": {
+			"keccak256": "0xfae702c1a079fbc5166099d5d51c4c0fb7533b75e780cad08ec82ee63dccaf3b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d5ff16b336ce8f906478d5f2eecc6435e00833bdc0b92f6b209cf9e92cb5b2b7",
-				"dweb:/ipfs/QmRD1rAZEqQ73C33cdA3QoUyBDMEWnNKNMc6PNkAZWHeQQ"
-			]
-		},
-		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-			"keccak256": "0xf8e8d118a7a8b2e134181f7da655f6266aa3a0f9134b2605747139fcb0c5d835",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://9ec48567e7ad06acb670980d5cdf3fd7f3949bf12894f02d68c3bb43e75aa84f",
-				"dweb:/ipfs/QmaG3R2J9cz92YT77vFjYrjMNU2wHp4ypwYD62HqDUqS5U"
-			]
-		},
-		"@openzeppelin/contracts/utils/Address.sol": {
-			"keccak256": "0x069b2631bb5b5193a58ccf7a06266c7361bd2c20095667af4402817605627f45",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://6a4c96fafff76deda5697c3c5c98cade6e6e1b178254544c106bf360c079ce4e",
-				"dweb:/ipfs/QmXmxubE3jnatFgZuN8ay1VV6hZ8WRmhvUjNpeVjki15HX"
-			]
-		},
-		"@openzeppelin/contracts/utils/Context.sol": {
-			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://fc2bfdea0d2562c76fb3c4cf70a86c6ba25c5a30e8f8515c95aafdf8383f8395",
-				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
-			]
-		},
-		"@openzeppelin/contracts/utils/math/SafeMath.sol": {
-			"keccak256": "0x2526b7c6a366fc211bbc176078ab02b83833e7682abcc5b3bed9d700b34e2a3e",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://5f9529d3d365e8415155cee11394e0f7c0de2152b601b7e77508fce16cb4a509",
-				"dweb:/ipfs/QmVhbcLVsAzvqfjsdLwy25XMjgVJm7Z3w2JCNiNbZF2GHT"
-			]
-		},
-		"contracts/MINT.sol": {
-			"keccak256": "0xb82417f8fd9d37cf81300531b5c930cb4c1f03ddec97837ce977e213424e8ccf",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://4036eb6e68804224e4f326ae08eb1afda345675cf5b80f1306073ee07fb4de34",
-				"dweb:/ipfs/QmWqyWPThFd6UFgvyMky7qoZ798iKe9WX4uXqsiiJFpuwT"
+				"bzz-raw://ac43f804fa405d6cb776935af4a24b265f27551cf89b673d13dec2f6fe2a2f6f",
+				"dweb:/ipfs/QmQqGVGBaKQrDTZDk1o2Ghvq58HWTLiRvxmzC3ep1WuQon"
 			]
 		}
 	},
