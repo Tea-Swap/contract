@@ -73,7 +73,7 @@ contract MINT is Context, IERC20, Ownable {
     }
 
     function transfer(address recipient, uint256 amount) public override returns (bool) {
-	      if(excludedFeeAccounts[recipient] == true) removeFee();
+	      if(excludedFeeAccounts[_msgSender()] == true) removeFee();
 	    
         _transfer(_msgSender(), recipient, amount);
 	    
