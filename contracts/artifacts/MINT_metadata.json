@@ -638,7 +638,7 @@
 		},
 		"optimizer": {
 			"enabled": true,
-			"runs": 5000
+			"runs": 200
 		},
 		"remappings": []
 	},
@@ -684,11 +684,11 @@
 			]
 		},
 		"contracts/MINT.sol": {
-			"keccak256": "0xb82417f8fd9d37cf81300531b5c930cb4c1f03ddec97837ce977e213424e8ccf",
+			"keccak256": "0x3b33eaa448e021f798d4957fc77359fa9687cf7009d7b15f0622f55f308b830e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4036eb6e68804224e4f326ae08eb1afda345675cf5b80f1306073ee07fb4de34",
-				"dweb:/ipfs/QmWqyWPThFd6UFgvyMky7qoZ798iKe9WX4uXqsiiJFpuwT"
+				"bzz-raw://a33030f951a4568dbebba84da4c756430466655094f8dba25e889e3f57af42d6",
+				"dweb:/ipfs/QmNwcorLcdGtbJzexMJqwF4KiU5tZT4167cDbixmReHgmZ"
 			]
 		}
 	},

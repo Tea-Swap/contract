@@ -689,7 +689,7 @@
 		},
 		"optimizer": {
 			"enabled": true,
-			"runs": 5000
+			"runs": 200
 		},
 		"remappings": []
 	},
@@ -750,20 +750,28 @@
 				"dweb:/ipfs/QmVhbcLVsAzvqfjsdLwy25XMjgVJm7Z3w2JCNiNbZF2GHT"
 			]
 		},
+		"contracts/GMINT.sol": {
+			"keccak256": "0x03451c6c20f2afb855c1a24b09051c4d8dc136ecad872ecad01f7bcbc3caa7ff",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://f04eac477ea9da41dbd5091c325bdf16ea47938a9f99d9cd181b7d7404871971",
+				"dweb:/ipfs/QmVh1YXkyWa3hF6TL8Q2hebXvvpEZzUh26QmnsofycD9aR"
+			]
+		},
 		"contracts/MINT.sol": {
-			"keccak256": "0xb82417f8fd9d37cf81300531b5c930cb4c1f03ddec97837ce977e213424e8ccf",
+			"keccak256": "0x3b33eaa448e021f798d4957fc77359fa9687cf7009d7b15f0622f55f308b830e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4036eb6e68804224e4f326ae08eb1afda345675cf5b80f1306073ee07fb4de34",
-				"dweb:/ipfs/QmWqyWPThFd6UFgvyMky7qoZ798iKe9WX4uXqsiiJFpuwT"
+				"bzz-raw://a33030f951a4568dbebba84da4c756430466655094f8dba25e889e3f57af42d6",
+				"dweb:/ipfs/QmNwcorLcdGtbJzexMJqwF4KiU5tZT4167cDbixmReHgmZ"
 			]
 		},
 		"contracts/MasterChef.sol": {
-			"keccak256": "0xbc871eec2401f938ca1450b7aa0eac639eb89c26d44e2f975f311543bf1e7a76",
+			"keccak256": "0x5d19aa1f81e1683b2c196f4f3688011152fa0bc35768427cb6c7078a040d9a06",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://480ec7e904c3236fe3fb934ac9d4cdd032d73be48e1247a9293c288bd1285124",
-				"dweb:/ipfs/QmQws3pMjVrFmDjspXk5QcTYBB3dSsBaeFUnBkJrwH4ehi"
+				"bzz-raw://c01313123ce803422bf2c6c5f47e0ce8c45a31c2e33e26d9922e0daf945004eb",
+				"dweb:/ipfs/QmWverKxQwaqi51VxNaaejQdEnmccXb37EsCvmg4NsBWhy"
 			]
 		}
 	},

@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.1+commit.df193b15"
+		"version": "0.8.0+commit.c7dfd78e"
 	},
 	"language": "Solidity",
 	"output": {
@@ -145,6 +145,110 @@
 						"internalType": "bytes32",
 						"name": "",
 						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "_bFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "_cFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "_dFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "_previousBFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "_previousCFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "_previousDFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "_previousTFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "_tFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -372,6 +476,43 @@
 						"internalType": "address",
 						"name": "account",
 						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "exclude",
+						"type": "bool"
+					}
+				],
+				"name": "excludeFromFee",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "excludedFeeAccounts",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
 					}
 				],
 				"name": "getCurrentVotes",
@@ -468,13 +609,8 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "account",
-						"type": "address"
-					},
-					{
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "tAMount",
 						"type": "uint256"
 					}
 				],
@@ -830,7 +966,7 @@
 		},
 		"optimizer": {
 			"enabled": true,
-			"runs": 5000
+			"runs": 200
 		},
 		"remappings": []
 	},
@@ -876,19 +1012,19 @@
 			]
 		},
 		"contracts/GMINT.sol": {
-			"keccak256": "0x57d07f644339fd31d9f9f4610855664ab1169bc2b34f9762c1657b025d3092b7",
+			"keccak256": "0xa0be3eb555ef62be37aa4a0460855edc08a9aa332f3ca66144aba81aa029d71b",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://0d6fc4e351c3a16d2da4fccd23b62c6055cafa9bb28608fccfe38157e0b30eae",
-				"dweb:/ipfs/QmP9MZFxvGQ5UgV635qJUJV4xDpGXhfJTKPaibK3MzSwvD"
+				"bzz-raw://869e1754c2045ea2a18443c48b337cbeac1af0a449fbe34d3ef9c2b1a6df33ea",
+				"dweb:/ipfs/QmbhsVddxDtLNktR6TKkgU8jtXiM84AjqNAoHWDpRrYMSr"
 			]
 		},
 		"contracts/MINT.sol": {
-			"keccak256": "0x62b21ffdff31cd56970e71ccb6cde4268feabe1f6cea98c0d41b239b1dac0822",
+			"keccak256": "0xb82417f8fd9d37cf81300531b5c930cb4c1f03ddec97837ce977e213424e8ccf",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4c02a6fe58fda7015604d23f5f5e6388e43de7ee072fd5cd773b89fee0baa279",
-				"dweb:/ipfs/QmRu43obT5RNUB87sEQAvGdvpkVhjbBTJKbnr235F5Wet1"
+				"bzz-raw://4036eb6e68804224e4f326ae08eb1afda345675cf5b80f1306073ee07fb4de34",
+				"dweb:/ipfs/QmWqyWPThFd6UFgvyMky7qoZ798iKe9WX4uXqsiiJFpuwT"
 			]
 		}
 	},
