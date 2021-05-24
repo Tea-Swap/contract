@@ -1,3 +1,10 @@
+/**
+ *Submitted for verification at BscScan.com on 2021-05-14
+*/
+
+/**
+ *Submitted for verification at BscScan.com on 2021-05-10
+*/
 
 // File: @openzeppelin/contracts/token/ERC20/IERC20.sol
 
@@ -1033,98 +1040,6 @@ contract ERC20 is Context, IERC20 {
     function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual { }
 }
 
-// File: contracts/interfaces/IStrategy.sol
-
-pragma solidity 0.6.12;
-
-// For interacting with our own strategy
-interface IStrategy {
-    // Total want tokens managed by stratfegy
-    function wantLockedTotal() external view returns (uint256);
-
-    // Main want token compounding function
-    function earn() external;
-
-    // Transfer want tokens yetiFarm -> strategy
-    function deposit(uint256 _wantAmt)
-    external
-    returns (uint256);
-
-    // Transfer want tokens strategy -> yetiFarm
-    function withdraw(uint256 _wantAmt)
-    external
-    returns (uint256);
-
-    function inCaseTokensGetStuck(
-        address _token,
-        uint256 _amount,
-        address _to
-    ) external;
-}
-
-
-interface IPancakeV2Factory {
-    function createPair(address tokenA, address tokenB) external returns (address pair);
-}
-
-interface IPancakeV2Pair {
-    function sync() external;
-}
-
-interface IPancakeV2Router01 {
-    function factory() external pure returns (address);
-    function WETH() external pure returns (address);
-    function addLiquidity(
-        address tokenA,
-        address tokenB,
-        uint amountADesired,
-        uint amountBDesired,
-        uint amountAMin,
-        uint amountBMin,
-        address to,
-        uint deadline
-    ) external returns (uint amountA, uint amountB, uint liquidity);
-    function addLiquidityETH(
-        address token,
-        uint amountTokenDesired,
-        uint amountTokenMin,
-        uint amountETHMin,
-        address to,
-        uint deadline
-    ) external payable returns (uint amountToken, uint amountETH, uint liquidity);
-}
-
-interface IPancakeV2Router02 is IPancakeV2Router01 {
-    function removeLiquidityETHSupportingFeeOnTransferTokens(
-        address token,
-        uint liquidity,
-        uint amountTokenMin,
-        uint amountETHMin,
-        address to,
-        uint deadline
-    ) external returns (uint amountETH);
-    function swapExactTokensForETHSupportingFeeOnTransferTokens(
-        uint amountIn,
-        uint amountOutMin,
-        address[] calldata path,
-        address to,
-        uint deadline
-    ) external;
-    function swapExactTokensForTokensSupportingFeeOnTransferTokens(
-        uint amountIn,
-        uint amountOutMin,
-        address[] calldata path,
-        address to,
-        uint deadline
-    ) external;
-    function swapExactETHForTokensSupportingFeeOnTransferTokens(
-        uint amountOutMin,
-        address[] calldata path,
-        address to,
-        uint deadline
-    ) external payable;
-}
-
 
 // File: contracts/SUGARToken.sol
 
@@ -1143,36 +1058,31 @@ contract SugarToken is ERC20("TeaSwap", "Sugar"), Ownable {
     }
 }
 
-// File: contracts/YetiMaster.sol
-
-// SPDX-License-Identifier: MIT
-
 pragma solidity 0.6.12;
 
-
-
-
-
-
-
-
+// MasterChef is the master of sugar. He can make sugar and he is a fair guy.
+//
+// Note that it's ownable and the owner wields tremendous power. The ownership
+// will be transferred to a governance smart contract once sugar is sufficiently
+// distributed and the community can show to govern itself.
+//
+// Have fun reading it. Hopefully it's bug-free. God bless.
 contract MasterChefV2 is Ownable, ReentrancyGuard {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
-
 
     // Info of each user.
     struct UserInfo {
         uint256 amount;         // How many LP tokens the user has provided.
         uint256 rewardDebt;     // Reward debt. See explanation below.
         //
-        // We do some fancy math here. Basically, any point in time, the amount of SUGARs
+        // We do some fancy math here. Basically, any point in time, the amount of sugars
         // entitled to a user but is pending to be distributed is:
         //
-        //   pending reward = (user.amount * pool.accSUGARPerShare) - user.rewardDebt
+        //   pending reward = (user.amount * pool.accsugarPerShare) - user.rewardDebt
         //
         // Whenever a user deposits or withdraws LP tokens to a pool. Here's what happens:
-        //   1. The pool's `accSUGARPerShare` (and `lastRewardBlock`) gets updated.
+        //   1. The pool's `accsugarPerShare` (and `lastRewardBlock`) gets updated.
         //   2. User receives the pending reward sent to his/her address.
         //   3. User's `amount` gets updated.
         //   4. User's `rewardDebt` gets updated.
@@ -1181,27 +1091,22 @@ contract MasterChefV2 is Ownable, ReentrancyGuard {
     // Info of each pool.
     struct PoolInfo {
         IERC20 lpToken;           // Address of LP token contract.
-        uint256 allocPoint;       // How many allocation points assigned to this pool. SUGAR to distribute per block.
-        uint256 lastRewardBlock;  // Last block number that SUGAR distribution occurs.
-        uint256 accSUGARPerShare;   // Accumulated SUGAR per share, times 1e12. See below.
+        uint256 allocPoint;       // How many allocation points assigned to this pool. sugars to distribute per block.
+        uint256 lastRewardBlock;  // Last block number that sugars distribution occurs.
+        uint256 accsugarPerShare;   // Accumulated sugars per share, times 1e12. See below.
         uint16 depositFeeBP;      // Deposit fee in basis points
     }
 
-
-
-    // The SUGAR TOKEN!
-    SugarToken public SUGAR;
-    // PCS router
-    IPancakeV2Router02 public pancakeV2Router;
+    // The sugar TOKEN!
+    SugarToken public sugar;
     // Dev address.
     address public devaddr;
-    // SUGAR tokens created per block.
-    uint256 public SUGARPerBlock;
-    // Bonus muliplier for early SUGAR makers.
+    // sugar tokens created per block.
+    uint256 public sugarPerBlock;
+    // Bonus muliplier for early sugar makers.
     uint256 public constant BONUS_MULTIPLIER = 1;
     // Deposit Fee address
-    address public feeTeam;
-    address public feeBuyBack;
+    address public feeAddress;
 
     // Info of each pool.
     PoolInfo[] public poolInfo;
@@ -1209,32 +1114,27 @@ contract MasterChefV2 is Ownable, ReentrancyGuard {
     mapping(uint256 => mapping(address => UserInfo)) public userInfo;
     // Total allocation points. Must be the sum of all allocation points in all pools.
     uint256 public totalAllocPoint = 0;
-    // The block number when SUGAR mining starts.
+    // The block number when sugar mining starts.
     uint256 public startBlock;
 
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
-    event SetFeeTeam(address indexed user, address indexed newAddress);
-    event SetFeeBuyBack(address indexed user, address indexed newAddress);
+    event SetFeeAddress(address indexed user, address indexed newAddress);
     event SetDevAddress(address indexed user, address indexed newAddress);
-    event UpdateEmissionRate(address indexed user, uint256 SUGARPerBlock);
+    event UpdateEmissionRate(address indexed user, uint256 goosePerBlock);
 
     constructor(
-        SugarToken _SUGAR,
-        IPancakeV2Router02 _pancakeV2Router,
+        SugarToken _sugar,
         address _devaddr,
-        address _feeTeam,
-        address _feeBuyBack,
-        uint256 _SUGARPerBlock,
+        address _feeAddress,
+        uint256 _sugarPerBlock,
         uint256 _startBlock
     ) public {
-        SUGAR = _SUGAR;
-        pancakeV2Router = _pancakeV2Router;
+        sugar = _sugar;
         devaddr = _devaddr;
-        feeTeam = _feeTeam;
-        feeBuyBack = _feeBuyBack;
-        SUGARPerBlock = _SUGARPerBlock;
+        feeAddress = _feeAddress;
+        sugarPerBlock = _sugarPerBlock;
         startBlock = _startBlock;
     }
 
@@ -1248,14 +1148,9 @@ contract MasterChefV2 is Ownable, ReentrancyGuard {
         _;
     }
 
-    modifier poolExists(uint256 pid) {
-        require(pid < poolInfo.length, "pool inexistent");
-        _;
-    }
-
     // Add a new lp to the pool. Can only be called by the owner.
     function add(uint256 _allocPoint, IERC20 _lpToken, uint16 _depositFeeBP, bool _withUpdate) public onlyOwner nonDuplicated(_lpToken) {
-        require(_depositFeeBP <= 400, "add: invalid deposit fee basis points");
+        require(_depositFeeBP <= 10000, "add: invalid deposit fee basis points");
         if (_withUpdate) {
             massUpdatePools();
         }
@@ -1266,15 +1161,14 @@ contract MasterChefV2 is Ownable, ReentrancyGuard {
         lpToken : _lpToken,
         allocPoint : _allocPoint,
         lastRewardBlock : lastRewardBlock,
-        accSUGARPerShare : 0,
+        accsugarPerShare : 0,
         depositFeeBP : _depositFeeBP
         }));
     }
 
-
-    // Update the given pool's SUGAR allocation point and deposit fee. Can only be called by the owner.
-    function set(uint256 _pid, uint256 _allocPoint, uint16 _depositFeeBP, bool _withUpdate) public onlyOwner poolExists(_pid) {
-        require(_depositFeeBP <= 400, "set: invalid deposit fee basis points");
+    // Update the given pool's sugar allocation point and deposit fee. Can only be called by the owner.
+    function set(uint256 _pid, uint256 _allocPoint, uint16 _depositFeeBP, bool _withUpdate) public onlyOwner {
+        require(_depositFeeBP <= 10000, "set: invalid deposit fee basis points");
         if (_withUpdate) {
             massUpdatePools();
         }
@@ -1288,18 +1182,18 @@ contract MasterChefV2 is Ownable, ReentrancyGuard {
         return _to.sub(_from).mul(BONUS_MULTIPLIER);
     }
 
-    // View function to see pending SUGARs on frontend.
-    function pendingSUGAR(uint256 _pid, address _user) external view returns (uint256) {
+    // View function to see pending sugars on frontend.
+    function pendingSugar(uint256 _pid, address _user) external view returns (uint256) {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][_user];
-        uint256 accSUGARPerShare = pool.accSUGARPerShare;
+        uint256 accsugarPerShare = pool.accsugarPerShare;
         uint256 lpSupply = pool.lpToken.balanceOf(address(this));
         if (block.number > pool.lastRewardBlock && lpSupply != 0) {
             uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-            uint256 SUGARReward = multiplier.mul(SUGARPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
-            accSUGARPerShare = accSUGARPerShare.add(SUGARReward.mul(1e12).div(lpSupply));
+            uint256 sugarReward = multiplier.mul(sugarPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
+            accsugarPerShare = accsugarPerShare.add(sugarReward.mul(1e12).div(lpSupply));
         }
-        return user.amount.mul(accSUGARPerShare).div(1e12).sub(user.rewardDebt);
+        return user.amount.mul(accsugarPerShare).div(1e12).sub(user.rewardDebt);
     }
 
     // Update reward variables for all pools. Be careful of gas spending!
@@ -1322,81 +1216,58 @@ contract MasterChefV2 is Ownable, ReentrancyGuard {
             return;
         }
         uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-        uint256 SUGARReward = multiplier.mul(SUGARPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
-        SUGAR.mint(devaddr, SUGARReward.mul(888).div(10000));
-        SUGAR.mint(address(this), SUGARReward);
-        pool.accSUGARPerShare = pool.accSUGARPerShare.add(SUGARReward.mul(1e12).div(lpSupply));
+        uint256 sugarReward = multiplier.mul(sugarPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
+        sugar.mint(devaddr, sugarReward.div(10));
+        sugar.mint(address(this), sugarReward);
+        pool.accsugarPerShare = pool.accsugarPerShare.add(sugarReward.mul(1e12).div(lpSupply));
         pool.lastRewardBlock = block.number;
     }
 
-    // Deposit LP tokens to MasterChef for SUGAR allocation.
-    function deposit(uint256 _pid, uint256 _amount) public nonReentrant  poolExists(_pid) {
+    // Deposit LP tokens to MasterChef for sugar allocation.
+    function deposit(uint256 _pid, uint256 _amount) public nonReentrant {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         updatePool(_pid);
         if (user.amount > 0) {
-            uint256 pending = user.amount.mul(pool.accSUGARPerShare).div(1e12).sub(user.rewardDebt);
+            uint256 pending = user.amount.mul(pool.accsugarPerShare).div(1e12).sub(user.rewardDebt);
             if (pending > 0) {
-                safeSUGARTransfer(msg.sender, pending);
-
-                if (pool.depositFeeBP > 0) {
-                    uint256 depositFee = _amount.mul(pool.depositFeeBP).div(10000);
-                    uint256 depositeFeeHalf = depositFee.div(2);
-                    pool.lpToken.safeTransfer(feeTeam, depositeFeeHalf);
-                    // Swap SUGAR to BNB
-                    swapTokensForBNB(depositeFeeHalf); // 50%
-                    // pool.lpToken.safeTransfer(feeBuyBack, depositeFeeHalf);
-                    user.amount = user.amount.add(_amount).sub(depositFee);
-                } else {
-                    user.amount = user.amount.add(_amount);
-                }
-
+                safeSugarTransfer(msg.sender, pending);
             }
         }
         if (_amount > 0) {
             pool.lpToken.safeTransferFrom(address(msg.sender), address(this), _amount);
             if (pool.depositFeeBP > 0) {
                 uint256 depositFee = _amount.mul(pool.depositFeeBP).div(10000);
-                uint256 depositeFeeHalf = depositFee.div(2);
-                pool.lpToken.safeTransfer(feeTeam, depositeFeeHalf);
-                // Swap SUGAR to BNB
-                swapTokensForBNB(depositeFeeHalf); // 50%
-                // pool.lpToken.safeTransfer(feeBuyBack, depositeFeeHalf);
+                pool.lpToken.safeTransfer(feeAddress, depositFee);
                 user.amount = user.amount.add(_amount).sub(depositFee);
             } else {
                 user.amount = user.amount.add(_amount);
             }
         }
-        user.rewardDebt = user.amount.mul(pool.accSUGARPerShare).div(1e12);
-
-
-
+        user.rewardDebt = user.amount.mul(pool.accsugarPerShare).div(1e12);
         emit Deposit(msg.sender, _pid, _amount);
-
-
-
     }
 
     // Withdraw LP tokens from MasterChef.
-    function withdraw(uint256 _pid, uint256 _amount) public nonReentrant poolExists(_pid) {
+    function withdraw(uint256 _pid, uint256 _amount) public nonReentrant {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         require(user.amount >= _amount, "withdraw: not good");
         updatePool(_pid);
-        uint256 pending = user.amount.mul(pool.accSUGARPerShare).div(1e12).sub(user.rewardDebt);
+        uint256 pending = user.amount.mul(pool.accsugarPerShare).div(1e12).sub(user.rewardDebt);
         if (pending > 0) {
-            safeSUGARTransfer(msg.sender, pending);
+            safeSugarTransfer(msg.sender, pending);
         }
         if (_amount > 0) {
             user.amount = user.amount.sub(_amount);
             pool.lpToken.safeTransfer(address(msg.sender), _amount);
         }
-        user.rewardDebt = user.amount.mul(pool.accSUGARPerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(pool.accsugarPerShare).div(1e12);
         emit Withdraw(msg.sender, _pid, _amount);
     }
 
     // Withdraw without caring about rewards. EMERGENCY ONLY.
-    function emergencyWithdraw(uint256 _pid) public nonReentrant poolExists(_pid) {
+    function emergencyWithdraw(uint256 _pid) public nonReentrant {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         uint256 amount = user.amount;
@@ -1406,35 +1277,17 @@ contract MasterChefV2 is Ownable, ReentrancyGuard {
         emit EmergencyWithdraw(msg.sender, _pid, amount);
     }
 
-    // Safe SUGAR transfer function, just in case if rounding error causes pool to not have enough SUGARs.
-    function safeSUGARTransfer(address _to, uint256 _amount) internal {
-        uint256 SUGARBal = SUGAR.balanceOf(address(this));
+    // Safe sugar transfer function, just in case if rounding error causes pool to not have enough sugars.
+    function safeSugarTransfer(address _to, uint256 _amount) internal {
+        uint256 sugarBal = sugar.balanceOf(address(this));
         bool transferSuccess = false;
-        if (_amount > SUGARBal) {
-            transferSuccess = SUGAR.transfer(_to, SUGARBal);
+        if (_amount > sugarBal) {
+            transferSuccess = sugar.transfer(_to, sugarBal);
         } else {
-            transferSuccess = SUGAR.transfer(_to, _amount);
+            transferSuccess = sugar.transfer(_to, _amount);
         }
-        require(transferSuccess, "safeSUGARTransfer: transfer failed");
+        require(transferSuccess, "safesugarTransfer: transfer failed");
     }
-
-    function swapTokensForBNB(uint256 tokenAmount) private {
-        // generate the pancake pair path of token -> weth
-        address[] memory path = new address[](2);
-        path[0] = address(this);
-        path[1] = pancakeV2Router.WETH();
-
-
-        // make the swap
-        pancakeV2Router.swapExactTokensForETHSupportingFeeOnTransferTokens(
-            tokenAmount,
-            0, // accept any amount of ETH
-            path,
-            address(this),
-            block.timestamp
-        );
-    }
-
 
     // Update dev address by the previous dev.
     function dev(address _devaddr) public {
@@ -1443,18 +1296,16 @@ contract MasterChefV2 is Ownable, ReentrancyGuard {
         emit SetDevAddress(msg.sender, _devaddr);
     }
 
-    function setFeeTeam(address _feeAddress) public {
-        require(msg.sender == feeTeam, "setFeeAddress: FORBIDDEN");
-        feeTeam = _feeAddress;
-        emit SetFeeTeam(msg.sender, _feeAddress);
+    function setFeeAddress(address _feeAddress) public {
+        require(msg.sender == feeAddress, "setFeeAddress: FORBIDDEN");
+        feeAddress = _feeAddress;
+        emit SetFeeAddress(msg.sender, _feeAddress);
     }
 
-    function setFeeBuyBack(address _feeAddress) public {
-        require(msg.sender == feeBuyBack, "setFeeAddress: FORBIDDEN");
-        feeBuyBack = _feeAddress;
-        emit SetFeeBuyBack(msg.sender, _feeAddress);
+    //Pancake has to add hidden dummy pools inorder to alter the emission, here we make it simple and transparent to all.
+    function updateEmissionRate(uint256 _sugarPerBlock) public onlyOwner {
+        massUpdatePools();
+        sugarPerBlock = _sugarPerBlock;
+        emit UpdateEmissionRate(msg.sender, _sugarPerBlock);
     }
-
-
-
 }
